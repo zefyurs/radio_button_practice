@@ -14,7 +14,7 @@ class MyRadioButton extends StatelessWidget {
   final String title;
   final ProductTypeEnum value;
   final ProductTypeEnum? productTypeEnum;
-  void Function(ProductTypeEnum?)? onchanged;
+  final void Function(ProductTypeEnum?)? onchanged;
 
   @override
   Widget build(BuildContext context) {
