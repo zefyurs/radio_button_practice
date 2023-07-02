@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:radio_button_practice/service/service.dart';
 
-import 'components/button.dart';
+import 'components/widget.dart';
 import 'components/drawer.dart';
 import 'components/explanation.dart';
 
@@ -13,10 +13,10 @@ class AcquisitionTaxCalulator extends StatefulWidget {
 }
 
 class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
-  int? locationControl = 0;
-  int? _isUnderOrOver85 = 0;
-  int? howManyHouseRestrictionControl = 0;
-  int? howManyHouseNonRestrictionControl = 0;
+  int locationControl = 0;
+  int isUnderOrOver85 = 0;
+  int howManyHouseRestrictionControl = 0;
+  int howManyHouseNonRestrictionControl = 0;
 
   double _acquisitionTax = 0;
   double _acquisitionTaxRate = 0;
@@ -24,11 +24,13 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
   double _specialTaxForRuralRate = 0;
   double _localEducationTax = 0;
   double _localEducationTaxRate = 0;
+  double tradingPriceToDouble = 0;
+
+  String tradingPriceToStr = '';
 
   final TextEditingController _tradingPriceController = TextEditingController();
 
   bool _isShowInfo = false;
-  bool _isTextFieldFocused = false;
   bool _isRestrictionArea = false;
   bool _isFirstBuying = false;
 
@@ -67,6 +69,9 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
 
   void calculateAcquisitionTax() {
     // remove commas
+    if (_tradingPriceController.text.isEmpty) {
+      return;
+    }
     String formatteredText = _tradingPriceController.text.replaceAll(',', '');
     double tradingPrice = double.parse(formatteredText);
 
@@ -87,7 +92,7 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
         acquisitionTaxRate = 0.03;
         localEducationTaxRate = 0.003;
       }
-      if (_isUnderOrOver85 == 1) {
+      if (isUnderOrOver85 == 1) {
         specialTaxforRuralAfterRate = 0.002;
       } else {
         specialTaxforRuralAfterRate = 0;
@@ -96,7 +101,7 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
       // * 비조정대상지역 3주택자
     } else if (!_isRestrictionArea && howManyHouseNonRestrictionControl == 1) {
       acquisitionTaxRate = 0.08;
-      if (_isUnderOrOver85 == 1) {
+      if (isUnderOrOver85 == 1) {
         specialTaxforRuralAfterRate = 0.006;
       } else {
         specialTaxforRuralAfterRate = 0;
@@ -108,7 +113,7 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
       // * 취득세율
       acquisitionTaxRate = 0.12;
       //* 농어촌특별세
-      if (_isUnderOrOver85 == 1) {
+      if (isUnderOrOver85 == 1) {
         specialTaxforRuralAfterRate = 0.006;
       } else {
         specialTaxforRuralAfterRate = 0;
@@ -129,7 +134,7 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
         acquisitionTaxRate = 0.03;
         localEducationTaxRate = 0.003;
       }
-      if (_isUnderOrOver85 == 1) {
+      if (isUnderOrOver85 == 1) {
         specialTaxforRuralAfterRate = 0.002;
       } else {
         specialTaxforRuralAfterRate = 0;
@@ -138,7 +143,7 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
 // * 조정대상지역 2주택자
     } else if (_isRestrictionArea && howManyHouseRestrictionControl == 1) {
       acquisitionTaxRate = 0.08;
-      if (_isUnderOrOver85 == 1) {
+      if (isUnderOrOver85 == 1) {
         specialTaxforRuralAfterRate = 0.006;
       } else {
         specialTaxforRuralAfterRate = 0;
@@ -148,7 +153,7 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
 // * 조정대상지역 3주택 이상
     } else if (_isRestrictionArea && howManyHouseRestrictionControl == 2) {
       acquisitionTaxRate = 0.12;
-      if (_isUnderOrOver85 == 1) {
+      if (isUnderOrOver85 == 1) {
         specialTaxforRuralAfterRate = 0.01;
       } else {
         specialTaxforRuralAfterRate = 0;
@@ -158,7 +163,7 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
 // * 조정대상지역 4주택 이상
     } else {
       acquisitionTaxRate = 0.12;
-      if (_isUnderOrOver85 == 1) {
+      if (isUnderOrOver85 == 1) {
         specialTaxforRuralAfterRate = 0.01;
       } else {
         specialTaxforRuralAfterRate = 0;
@@ -183,23 +188,24 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
         FocusScope.of(context).unfocus();
       },
       child: Container(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.primary,
         child: SafeArea(
+          bottom: false,
           child: Scaffold(
-            appBar: AppBar(
-              title: const Text('부동산 계산기'),
-            ),
+            appBar: const MyAppBar(),
             drawer: const MyDrawer(),
             bottomNavigationBar: // * 계산하기
                 Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.only(bottom: 30),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
                       width: 250,
                       child: ElevatedButton(
-                          onPressed: _tradingPriceController.text.isNotEmpty ? calculateAcquisitionTax : () {},
+                          onPressed: () {
+                            calculateAcquisitionTax();
+                          },
                           child: const Text(
                             '계산하기',
                             style: TextStyle(
@@ -215,71 +221,60 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
               children: [
                 //
                 //* 타이틀
+                const SubTitleWidget(icon: Icon(Icons.calculate), title: '취득세 계산(농지외 유상취득)'),
 
-                ListTile(
-                  // contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.calculate),
-                  title: const Text('취득세 계산(농지외 유상취득)', style: TextStyle(fontSize: 18)),
-                  iconColor: Theme.of(context).colorScheme.primary,
-                ),
+                //* 설명카드
                 Padding(
                   padding: const EdgeInsets.only(left: 30, right: 30),
-                  child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: _isShowInfo
-                          ? Column(
-                              children: [
-                                Text(acquisitionTaxExplanation),
-                                GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        _isShowInfo = !_isShowInfo;
-                                      });
-                                    },
-                                    child: const Text('가리기'))
-                              ],
-                            )
-                          : Column(
-                              children: [
-                                Text(
-                                  acquisitionTaxExplanation,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        _isShowInfo = !_isShowInfo;
-                                      });
-                                    },
-                                    child: const Text('더보기'))
-                              ],
-                            )),
+                  child: ExplanationCard(
+                      isShowInfo: _isShowInfo,
+                      onTap: () => setState(() => _isShowInfo = !_isShowInfo),
+                      text: acquisitionTaxExplanation),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
+
                 Padding(
                   padding: const EdgeInsets.only(left: 30, right: 30),
                   child: Row(
                     children: [
-                      Expanded(child: buildTextField(_tradingPriceController, '과세표준액(매매가)')),
+                      Expanded(
+                          child: Stack(children: [
+                        buildTextField(
+                            _tradingPriceController,
+                            '과세표준액(매매가)',
+                            (string) => setState(() {
+                                  tradingPriceToDouble = double.parse(string.replaceAll(',', ''));
+                                  tradingPriceToStr = chagneDigitToStrTypeNumber(tradingPriceToDouble);
+                                })),
+                        _tradingPriceController.text.isNotEmpty
+                            ? DisplayDigitToStr(text: tradingPriceToStr)
+                            : const SizedBox.shrink(),
+                      ])),
                       const SizedBox(width: 15),
                       const Text('원', style: TextStyle(fontSize: 18)),
                     ],
                   ),
                 ),
-                const SizedBox(width: 15),
                 const SizedBox(height: 15),
+
+                // * 85m2 이상 여부 확인
+
                 Padding(
                   padding: const EdgeInsets.only(left: 30, right: 30),
-                  child: buildSegmentedControl(_isUnderOrOver85, areaChildren, (value) {
-                    setState(() {
-                      _isUnderOrOver85 = value;
-                    });
-                  }),
+                  child: buildSegmentedControl(
+                    isUnderOrOver85,
+                    areaChildren,
+                    (value) {
+                      setState(() {
+                        if (value == 0) {
+                          isUnderOrOver85 = 0;
+                        } else {
+                          isUnderOrOver85 = 1;
+                        }
+                        calculateAcquisitionTax();
+                      });
+                    },
+                  ),
                 ),
                 // * 조정대상지역 선택
                 Padding(
@@ -295,6 +290,7 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
                     onChanged: (bool? value) {
                       setState(() {
                         _isRestrictionArea = value!;
+                        calculateAcquisitionTax();
                       });
                     },
                   ),
@@ -302,19 +298,41 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
 
                 // * 주택수 선택
                 Padding(
-                    padding: const EdgeInsets.only(left: 30, right: 30),
-                    child: _isRestrictionArea
-                        ? buildSegmentedControl(howManyHouseRestrictionControl, howManyHouseRestrictionWidget, (value) {
+                  padding: const EdgeInsets.only(left: 30, right: 30),
+                  child: _isRestrictionArea
+                      ? buildSegmentedControl(
+                          howManyHouseRestrictionControl,
+                          howManyHouseRestrictionWidget,
+                          (value) {
                             setState(() {
-                              howManyHouseRestrictionControl = value;
+                              if (value == 0) {
+                                howManyHouseRestrictionControl = 0;
+                              } else if (value == 1) {
+                                howManyHouseRestrictionControl = 1;
+                              } else {
+                                howManyHouseRestrictionControl = 2;
+                              }
+                              calculateAcquisitionTax();
                             });
-                          })
-                        : buildSegmentedControl(howManyHouseNonRestrictionControl, howManyHouseNonRestrictionWidget,
-                            (value) {
+                          },
+                        )
+                      : buildSegmentedControl(
+                          howManyHouseNonRestrictionControl,
+                          howManyHouseNonRestrictionWidget,
+                          (value) {
                             setState(() {
-                              howManyHouseNonRestrictionControl = value;
+                              if (value == 0) {
+                                howManyHouseNonRestrictionControl = 0;
+                              } else if (value == 1) {
+                                howManyHouseNonRestrictionControl = 1;
+                              } else {
+                                howManyHouseNonRestrictionControl = 2;
+                              }
+                              calculateAcquisitionTax();
                             });
-                          })),
+                          },
+                        ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 30, right: 30),
                   child: CheckboxListTile(
@@ -328,49 +346,47 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
                     onChanged: (bool? value) {
                       setState(() {
                         _isFirstBuying = value!;
+                        calculateAcquisitionTax();
                       });
                     },
                   ),
                 ),
-                const SizedBox(height: 20),
+                // const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.only(left: 30, right: 30),
-                  child: DataTable(columns: const [
+                  child: DataTable(columnSpacing: 0, horizontalMargin: 0, columns: const [
+                    DataColumn(
+                        label: Text(
+                      '세목',
+                    )),
                     DataColumn(
                         label: Expanded(
-                            child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Text('세목')],
-                    ))),
+                      child: Text(
+                        '세율',
+                        textAlign: TextAlign.end,
+                      ),
+                    )),
                     DataColumn(
                         label: Expanded(
-                            child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Text('세율')],
-                    ))),
-                    DataColumn(
-                        label: Expanded(
-                            child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Text('세액')],
-                    ))),
+                      child: Text(
+                        '세액',
+                        textAlign: TextAlign.end,
+                      ),
+                    )),
                   ], rows: [
                     DataRow(cells: [
                       const DataCell(Text('취득세')),
-                      DataCell(Expanded(
-                          child: Row(
+                      DataCell(Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(('${_acquisitionTaxRate * 100} %')),
                         ],
-                      ))),
-                      DataCell(Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(formatWithCommas(_acquisitionTax.ceilToDouble()).toString()),
-                          ],
-                        ),
+                      )),
+                      DataCell(Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(formatWithCommas(_acquisitionTax.ceilToDouble()).toString()),
+                        ],
                       )),
                     ]),
                     DataRow(cells: [
@@ -381,37 +397,31 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
                           Text('농어촌특별세'),
                           Text(
                             '(전용면적85㎟ 초과만)',
-                            style: TextStyle(fontSize: 12),
+                            style: TextStyle(fontSize: 9),
                           )
                         ],
                       )),
-                      DataCell(Expanded(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [Text(('${_specialTaxForRuralRate * 100} %'))]))),
-                      DataCell(Expanded(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [Text(formatWithCommas(_specialTaxForRural.ceilToDouble()).toString())]))),
+                      DataCell(Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [Text(('${_specialTaxForRuralRate * 100} %'))])),
+                      DataCell(Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [Text(formatWithCommas(_specialTaxForRural.ceilToDouble()).toString())])),
                     ]),
                     DataRow(cells: [
                       const DataCell(Text('지방교육세')),
-                      DataCell(Expanded(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [Text(('${(_localEducationTaxRate * 100).toStringAsFixed(2)} %'))]))),
-                      DataCell(Expanded(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [Text(formatWithCommas(_localEducationTax.ceilToDouble()).toString())]))),
+                      DataCell(Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [Text(('${(_localEducationTaxRate * 100).toStringAsFixed(1)} %'))])),
+                      DataCell(Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [Text(formatWithCommas(_localEducationTax.ceilToDouble()).toString())])),
                     ]),
                     if (_isFirstBuying)
                       const DataRow(cells: [
                         DataCell(Text('생애최초주택구입감면')),
-                        DataCell(
-                            Expanded(child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [Text(('-'))]))),
-                        DataCell(Expanded(
-                            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [Text('-2,000,000')]))),
+                        DataCell(Row(mainAxisAlignment: MainAxisAlignment.end, children: [Text(('-'))])),
+                        DataCell(Row(mainAxisAlignment: MainAxisAlignment.end, children: [Text('-2,000,000')])),
                       ]),
                     DataRow(cells: [
                       DataCell(Text(
@@ -419,25 +429,28 @@ class _AcquisitionTaxCalulatorState extends State<AcquisitionTaxCalulator> {
                         style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
                       )),
                       _tradingPriceController.text.isNotEmpty
-                          ? DataCell(Text(_isFirstBuying
-                              ? '${((_acquisitionTax.ceilToDouble() + _localEducationTax.ceilToDouble() - 2000000) / double.parse(_tradingPriceController.text.replaceAll(',', '')) * 100).toStringAsFixed(2)} %'
-                              : '${((_acquisitionTax.ceilToDouble() + _localEducationTax.ceilToDouble()) / double.parse(_tradingPriceController.text.replaceAll(',', '')) * 100).toStringAsFixed(2)} %'))
+                          ? DataCell(Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(_isFirstBuying
+                                    ? '${((_acquisitionTax.ceilToDouble() + _localEducationTax.ceilToDouble() - 2000000) / double.parse(_tradingPriceController.text.replaceAll(',', '')) * 100).toStringAsFixed(2)} %'
+                                    : '${((_acquisitionTax.ceilToDouble() + _localEducationTax.ceilToDouble()) / double.parse(_tradingPriceController.text.replaceAll(',', '')) * 100).toStringAsFixed(2)} %'),
+                              ],
+                            ))
                           : const DataCell(Text('-')),
-                      DataCell(Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              _isFirstBuying
-                                  ? formatWithCommas(
-                                          _acquisitionTax.ceilToDouble() + _localEducationTax.ceilToDouble() - 2000000)
-                                      .toString()
-                                  : formatWithCommas(_acquisitionTax.ceilToDouble() + _localEducationTax.ceilToDouble())
-                                      .toString(),
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
+                      DataCell(Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            _isFirstBuying
+                                ? formatWithCommas(
+                                        _acquisitionTax.ceilToDouble() + _localEducationTax.ceilToDouble() - 2000000)
+                                    .toString()
+                                : formatWithCommas(_acquisitionTax.ceilToDouble() + _localEducationTax.ceilToDouble())
+                                    .toString(),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       )),
                     ]),
                   ]),

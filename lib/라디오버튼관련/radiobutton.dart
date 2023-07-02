@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-enum ProductTypeEnum { Downloadable, Deliverable }
+enum ProductTypeEnum { downLoadable, deliverable }
 
 class MyRadioButton extends StatelessWidget {
-  MyRadioButton({
+  const MyRadioButton({
     super.key,
     required this.title,
     required this.value,
@@ -20,9 +20,9 @@ class MyRadioButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RadioListTile<ProductTypeEnum>(
       title: Text(title),
-      value: ProductTypeEnum.Downloadable,
+      value: ProductTypeEnum.downLoadable,
       groupValue:
-          productTypeEnum.toString() == 'Downloadable' ? ProductTypeEnum.Downloadable : ProductTypeEnum.Deliverable,
+          productTypeEnum.toString() == 'Downloadable' ? ProductTypeEnum.downLoadable : ProductTypeEnum.deliverable,
       dense: true,
       contentPadding: const EdgeInsets.all(0),
       shape: RoundedRectangleBorder(

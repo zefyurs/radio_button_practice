@@ -39,7 +39,7 @@ class _PracticeState extends State<Practice> {
               )),
           TextButton(
             onPressed: summary,
-            child: Text('더하기'),
+            child: const Text('더하기'),
           ),
           Text('합계: $_sum'),
         ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:radio_button_practice/transferincome_tax_cal_page.dart';
 
-import '../home_page.dart';
+import '../acquisition_tax_cal_page.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({
@@ -26,7 +27,13 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text('Item 2'),
+            title: const Text('양도소득세 계산기'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const TransferIncomeTaxCalculator()));
+            },
+          ),
+          ListTile(
+            title: const Text('창 닫기'),
             onTap: () {
               Navigator.pop(context);
             },

@@ -20,3 +20,24 @@ String formatWithCommas(double value) {
   formattedValue = formattedValue.replaceAllMapped(regExp, (Match match) => '${match[1]},');
   return formattedValue;
 }
+
+// * 숫자를 한글로 변환
+String chagneDigitToStrTypeNumber(double amount) {
+  const units = ['', '만', '억', '조', '경'];
+
+  int unitIndex = 0;
+  while (amount >= 10000 && unitIndex < units.length - 1) {
+    amount /= 10000;
+    unitIndex++;
+  }
+
+  String result;
+  if (amount % 1 == 0) {
+    result = '${amount.toInt()}${units[unitIndex]}원';
+  } else {
+    String formattedAmount = amount.toStringAsFixed(1).replaceAll('.0', '');
+    result = '$formattedAmount${units[unitIndex]}원';
+  }
+
+  return result;
+}

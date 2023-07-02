@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:radio_button_practice/textbox.dart';
+import 'package:radio_button_practice/%EB%9D%BC%EB%94%94%EC%98%A4%EB%B2%84%ED%8A%BC%EA%B4%80%EB%A0%A8/textbox.dart';
 
 class RadioPage extends StatefulWidget {
   const RadioPage({super.key});
@@ -19,7 +19,7 @@ class _RadioPageState extends State<RadioPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        duration: Duration(seconds: 2), // Control how long the SnackBar is displayed
+        duration: const Duration(seconds: 2), // Control how long the SnackBar is displayed
       ),
     );
   }
@@ -160,7 +160,7 @@ class _RadioPageState extends State<RadioPage> {
                     ),
                   ],
                 ),
-                Text('''신체
+                const Text('''신체
 164cm
 소속사
 EDAM엔터테인먼트
