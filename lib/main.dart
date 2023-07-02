@@ -21,14 +21,6 @@ class MainApp extends StatelessWidget {
         fontFamily: GoogleFonts.gothicA1().fontFamily,
         useMaterial3: true,
       ),
-      supportedLocales: const [
-        Locale('ko', 'KR'),
-      ],
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
       home: const AcquisitionTaxCalulator(),
     );
   }

@@ -200,3 +200,27 @@ class DisplayDigitToStr extends StatelessWidget {
     );
   }
 }
+
+Future<dynamic> myDateTimePicker(BuildContext context, Function(DateTime) onChanged) {
+  return showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.3,
+          color: Colors.white,
+          child: Column(
+            children: [
+              Expanded(
+                child: CupertinoDatePicker(
+                    initialDateTime: DateTime.now(),
+                    onDateTimeChanged: onChanged,
+                    mode: CupertinoDatePickerMode.date,
+                    minimumDate: DateTime(2000),
+                    maximumDate: DateTime.now().add(const Duration(days: 1 * 365))),
+              ),
+              SubmmitButton(title: '확인', onPressed: () => Navigator.pop(context)),
+            ],
+          ),
+        );
+      });
+}
