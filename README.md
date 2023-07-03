@@ -1,3 +1,5 @@
 # radio_button_practice
 
-A new Flutter project.
+양도세, 취득세 계산을 위한 어플리케이션입니다.
+
+주택 매매 계산을 주 목적으로 만들었습니다.
