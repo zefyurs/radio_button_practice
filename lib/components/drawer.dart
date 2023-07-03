@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:radio_button_practice/transferincome_tax_cal_page.dart';
-
-import '../acquisition_tax_cal_page.dart';
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({
-    super.key,
-  });
+  final int pageIndex;
+  final Function(int) onPageSelected;
+
+  const MyDrawer({super.key, required this.pageIndex, required this.onPageSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -21,18 +19,23 @@ class MyDrawer extends StatelessWidget {
             child: const Text('부동산 계산기'),
           ),
           ListTile(
+            leading: const Icon(Icons.calculate),
             title: const Text('취득세 계산기'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const AcquisitionTaxCalulator()));
+              onPageSelected(0);
+              Navigator.pop(context);
             },
           ),
           ListTile(
+            leading: const Icon(Icons.calculate),
             title: const Text('양도소득세 계산기'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const TransferIncomeTaxCalculator()));
+              onPageSelected(1);
+              Navigator.pop(context);
             },
           ),
           ListTile(
+            leading: const Icon(Icons.logout),
             title: const Text('창 닫기'),
             onTap: () {
               Navigator.pop(context);

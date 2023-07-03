@@ -90,10 +90,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.primary,
       foregroundColor: Colors.white,
-      title: Text(
-        '부동산 계산기',
+      title: const Text(
+        'cal',
         style: TextStyle(
-          fontFamily: GoogleFonts.doHyeon().fontFamily,
+          // fontFamily: GoogleFonts.doHyeon().fontFamily,
           fontSize: 30,
         ),
       ),
@@ -110,12 +110,12 @@ class SubmmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
+      padding: const EdgeInsets.only(bottom: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-              width: 250,
+              width: MediaQuery.of(context).size.width * 0.7,
               child: ElevatedButton(
                   onPressed: onPressed,
                   child: Text(
@@ -221,6 +221,27 @@ Future<dynamic> myDateTimePicker(BuildContext context, Function(DateTime) onChan
               SubmmitButton(title: '확인', onPressed: () => Navigator.pop(context)),
             ],
           ),
+        );
+      });
+}
+
+Future<dynamic> myShowDiagram(BuildContext context, String title, String explanation) {
+  return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            title,
+            style: const TextStyle(fontSize: 18),
+          ),
+          content: Text(explanation),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('확인')),
+          ],
         );
       });
 }
